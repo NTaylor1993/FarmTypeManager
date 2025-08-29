@@ -56,7 +56,7 @@ Chinese (Simplified) | [zh.json](https://github.com/Esca-MMC/FarmTypeManager/blo
 Dutch | [nl.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/nl.json) | [UnrealThingTriesCode](https://github.com/UnrealThingTriesCode)
 French | [fr.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/fr.json) | [Fsecho7](https://next.nexusmods.com/profile/Fsecho7)
 German | [de.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/de.json) | [777PamPam777](https://next.nexusmods.com/profile/777PamPam777)
-Portuguese (Brazilian) | [pt-BR.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/pt-BR.json) | [roanrobersson](https://github.com/roanrobersson)
+Portuguese (Brazilian) | [pt.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/pt.json) | [roanrobersson](https://github.com/roanrobersson)
 Turkish | [tr.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/tr.json) | [Rupurudu](https://github.com/Rupurudu)
 Ukrainian | [uk.json](https://github.com/Esca-MMC/FarmTypeManager/blob/master/FarmTypeManager/i18n/uk.json) | [burunduk](https://github.com/burunduk)
 
