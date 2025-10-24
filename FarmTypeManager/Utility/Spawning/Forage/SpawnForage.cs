@@ -11,9 +11,9 @@ namespace FarmTypeManager
         /// <summary>Methods used repeatedly by other sections of this mod, e.g. to locate tiles.</summary>
         private static partial class Utility
         {
-            /// <summary>Generates an object from an index and places it on the specified map and tile.</summary>
-            /// <param name="index">The parent sheet index (a.k.a. object ID) of the object type to spawn.</param>
-            /// <param name="location">The GameLocation where the forage should be spawned.</param>
+            /// <summary>Generates a basic object from an ID and places it on the specified map and tile.</summary>
+            /// <param name="index">The unqualified ID of the object to spawn.</param>
+            /// <param name="location">The location to spawn the object.</param>
             /// <param name="indestructible">True if this forage should spawn as an "indestructible" item that can't be picked up (regardless of its normal behavior).</param>
             /// <param name="tile">The x/y coordinates of the tile where the ore should be spawned.</param>
             public static bool SpawnForage(string index, GameLocation location, Vector2 tile, bool indestructible = false)
@@ -101,10 +101,13 @@ namespace FarmTypeManager
 
                     if (forageItem is StardewValley.Object bc && bc.bigCraftable.Value) //if this item is a big craftable
                     {
-                        //handle special types
+                        //handle special types and item settings
                         if (bc.HasContextTag("torch_item"))
                         {
-                            bc = new Torch(bc.ItemId, true);
+                            bc = new Torch(bc.ItemId, true); //recreate the item as a torch, because BCs only use this class while placed
+                            if (forage.ConfigItem?.IsOn.HasValue == true)
+                                bc.IsOn = forage.ConfigItem.IsOn.Value;
+                            bc.initializeLightSource(tile);
                         }
 
                         if (forage.ConfigItem?.CanBePickedUp == false)

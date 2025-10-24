@@ -210,16 +210,25 @@ namespace FarmTypeManager
                     return null;
                 }
 
-                if (configItem?.Stack > 1) //if this item has a custom stack setting
+                if (configItem != null)
                 {
-                    int clampedStackValue = Math.Min(configItem.Stack.Value, item.maximumStackSize()); //limit the custom stack value to the maximum allowed by this item
-                    item.Stack = clampedStackValue; //apply it
-                }
+                    if (item is StardewValley.Object obj) //if this is an object, apply related settings
+                    {
+                        if (configItem.IsOn != null)
+                            obj.IsOn = configItem.IsOn.Value;
+                    }
 
-                if (item is Furniture furniture) //if the created item is furniture (including from DGA, etc)
-                {
-                    int rotations = configItem.Rotation ?? 0; //if this item has a custom rotation setting, use it
-                    furniture.SetPlacement(tile, rotations); //set the furniture's tile and rotation
+                    if (item is Furniture furniture) //if the created item is furniture (including from DGA, etc)
+                    {
+                        int rotations = configItem.Rotation ?? 0; //if this item has a custom rotation setting, use it
+                        furniture.SetPlacement(tile, rotations); //set the furniture's tile and rotation
+                    }
+
+                    if (configItem.Stack > 1) //if this item has a custom stack setting
+                    {
+                        int clampedStackValue = Math.Min(configItem.Stack.Value, item.maximumStackSize()); //limit the custom stack value to the maximum allowed by this item
+                        item.Stack = clampedStackValue;
+                    }
                 }
 
                 return item;

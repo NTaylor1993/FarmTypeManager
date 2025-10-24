@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using StardewModdingAPI;
 using System.Collections.Generic;
+using StardewValley;
 
 namespace FarmTypeManager
 {
     public partial class ModEntry : Mod
     {
-        /// <summary>A set of "advanced" options for a StardewValley.Item. Designed for readable JSON serialization.</summary>
+        /// <summary>A group of settings for an <see cref="Item"/>. Designed for readable JSON serialization.</summary>
         public class ConfigItem
         {
             /// <summary>False if players should be prevented from picking up this item. Not necessarily supported or relevant for all categories.</summary>
@@ -21,7 +22,12 @@ namespace FarmTypeManager
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public List<object> Contents { get; set; }
 
-            /// <summary>The item's name, e.g. "Galaxy Sword".</summary>
+            /// <summary>This item's <see cref="StardewValley.Object.IsOn"/> value.</summary>
+            /// <remarks>This affects certain objects that players can toggle on and off, e.g. torches.</remarks>
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public bool? IsOn { get; set; }
+
+            /// <summary>The item's unqualified ID (<see cref="Item.ItemId"/>) or internal name (<see cref="Item.Name"/>), e.g. "Galaxy Sword".</summary>
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public string Name { get; set; }
 
@@ -44,7 +50,7 @@ namespace FarmTypeManager
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public int? Stack { get; set; }
 
-            /// <summary>The object's type, determined by the Category string. Defaults to the Item type.</summary>
+            /// <summary>The item's type, determined by the Category string. Defaults to the Item type.</summary>
             [JsonIgnore]
             public SavedObject.ObjectType Type
             {
