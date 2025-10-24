@@ -164,7 +164,7 @@ namespace FarmTypeManager
                     case "objects":
                     case "item":
                     case "items":
-                        item = new StardewValley.Object(save.StringID, 1); //create an "normal" object (in whatever way is preferable for a held/dropped item)
+                        item = ItemRegistry.Create("(O)" + save.StringID);
                         break;
                     case "(p)":
                     case "p":

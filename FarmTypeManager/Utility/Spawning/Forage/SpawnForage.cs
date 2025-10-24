@@ -18,28 +18,37 @@ namespace FarmTypeManager
             /// <param name="tile">The x/y coordinates of the tile where the ore should be spawned.</param>
             public static bool SpawnForage(string index, GameLocation location, Vector2 tile, bool indestructible = false)
             {
-                StardewValley.Object forageObj = new StardewValley.Object(index, 1)
-                {
-                    Location = location,
-                    TileLocation = tile
-                };
+                StardewValley.Object forageObj = ItemRegistry.Create<StardewValley.Object>("(O)" + index);
+                forageObj.Location = location;
+                forageObj.TileLocation = tile;
 
                 if (indestructible) //if this should NOT be picked up or destroyed by players
                 {
                     forageObj.Fragility = StardewValley.Object.fragility_Indestructable;
                     forageObj.modData[Utility.ModDataKeys.CanBePickedUp] = "false";
                 }
-                else if (CanBePickedUp(index)) //if this ID is normally allowed to be picked up
+                else if (CanBePickedUp(index) && forageObj is not Torch) //if this ID is normally allowed to be picked up
                 {
-                    forageObj.IsSpawnedObject = true; //allow "normal" forage behavior if applicable (including allowing players to pick it up)
+                    forageObj.IsSpawnedObject = true; //allow normal forage behavior if applicable (e.g. allowing players to pick it up)
                 }
 
                 int? durability = GetDefaultDurability(index); //try to get this item's default durability
-                if (durability.HasValue) //if a default exists
-                    forageObj.MinutesUntilReady = durability.Value; //use it
+                if (durability.HasValue)
+                    forageObj.MinutesUntilReady = durability.Value;
 
                 Monitor.VerboseLog($"Spawning forage object. Name: {forageObj.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
-                return location.objects.TryAdd(tile, forageObj); //attempt to add the object and return success/failure
+                if (location.objects.TryAdd(tile, forageObj))
+                {
+                    //handle special types
+                    if (forageObj is Torch torch)
+                    {
+                        torch.IsOn = true;
+                        torch.initializeLightSource(tile);
+                    }
+
+                    return true;
+                }
+                else return false;
             }
 
             /// <summary>Generates an item from a saved object and places it on the specified map and tile.</summary>
@@ -92,6 +101,12 @@ namespace FarmTypeManager
 
                     if (forageItem is StardewValley.Object bc && bc.bigCraftable.Value) //if this item is a big craftable
                     {
+                        //handle special types
+                        if (bc.HasContextTag("torch_item"))
+                        {
+                            bc = new Torch(bc.ItemId, true);
+                        }
+
                         if (forage.ConfigItem?.CanBePickedUp == false)
                         {
                             //disable pickup if applicable
