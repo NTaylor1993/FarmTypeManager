@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using StardewModdingAPI;
-using System.Collections.Generic;
 using StardewValley;
+using System.Collections.Generic;
 
 namespace FarmTypeManager
 {
