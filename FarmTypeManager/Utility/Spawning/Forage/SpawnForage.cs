@@ -85,8 +85,7 @@ namespace FarmTypeManager
                     }
 
                     Monitor.VerboseLog($"Spawning container. Name: {container.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
-                    location.objects.Add(tile, (StardewValley.Object)container); //add the container to the location's object array
-                    return true;
+                    return location.objects.TryAdd(tile, (StardewValley.Object)container);
                 }
                 else if (forage.Type == SavedObject.ObjectType.DGA) //if this is a DGA item
                 {
@@ -118,8 +117,7 @@ namespace FarmTypeManager
                         }
 
                         Monitor.VerboseLog($"Spawning big craftable. Name: {forageItem.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
-                        location.objects.Add(tile, bc);
-                        return true;
+                        return location.objects.TryAdd(tile, bc);
                     }
                     else if (forageItem is Fence fence)
                     {
@@ -131,8 +129,7 @@ namespace FarmTypeManager
                         }
 
                         Monitor.VerboseLog($"Spawning fence. Name: {forageItem.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
-                        location.objects.Add(tile, fence);
-                        return true;
+                        return location.objects.TryAdd(tile, fence);
                     }
                     else if (forageItem is Furniture furniture)
                     {
@@ -159,9 +156,8 @@ namespace FarmTypeManager
                             placed.modData[Utility.ModDataKeys.CanBePickedUp] = "false";
                         }
 
-                        Monitor.VerboseLog($"Spawning forage item. Name: {forageItem.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
-                        location.terrainFeatures.Add(tile, placed); //add the placed item to this location
-                        return true;
+                        Monitor.VerboseLog($"Spawning \"placed item\" forage. Name: {forageItem.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
+                        return location.terrainFeatures.TryAdd(tile, placed);
                     }
                 }
             }
@@ -220,8 +216,7 @@ namespace FarmTypeManager
                         }
 
                         Monitor.VerboseLog($"Spawning DGA forage item. Name: {forage.Name}. Location: {tile.X},{tile.Y} ({location.Name}).");
-                        location.terrainFeatures.Add(tile, placed); //add the placed item to this location
-                        return true;
+                        return location.terrainFeatures.TryAdd(tile, placed); //add the placed item to this location
                     }
 
                     //if the item was null or not an Item class
