@@ -72,7 +72,7 @@ namespace FarmTypeManager
                         catch (Exception)
                         {
                             Monitor.Log($"This part of the extra condition \"Years\" is formatted incorrectly: \"{year}\". This spawn area will be disabled.", LogLevel.Info);
-                            
+
                             if (packManifest != null)
                                 Monitor.Log($"Mod ID: \"{packManifest.UniqueID}\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
                             else
@@ -178,12 +178,12 @@ namespace FarmTypeManager
                         catch (Exception)
                         {
                             Monitor.Log($"This part of the extra condition \"Days\" is formatted incorrectly: \"{day}\". This spawn area will be disabled.", LogLevel.Info);
-                            
+
                             if (packManifest != null)
                                 Monitor.Log($"Mod ID: \"{packManifest.UniqueID}\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
                             else
                                 Monitor.Log($"File: \"data/{Constants.SaveFolderName}.json\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
-                           
+
                             return false;
                         }
                     }

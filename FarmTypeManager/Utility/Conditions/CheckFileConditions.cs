@@ -64,12 +64,12 @@ namespace FarmTypeManager
                         {
                             Monitor.Log($"A setting in the FarmTypes list could not be parsed. It was not a string or integer.", LogLevel.Info);
                             Monitor.Log($"The setting will be considered false. If it's intended to be a custom farm type, please use its ID number instead of its name.", LogLevel.Info);
-                            
+
                             if (pack != null)
                                 Monitor.Log($"Mod ID: \"{pack.Manifest.UniqueID}\".", LogLevel.Info);
                             else
                                 Monitor.Log($"File: \"data/{Constants.SaveFolderName}.json\".", LogLevel.Info);
-                            
+
                             continue; //skip to the next farm type condition
                         }
 

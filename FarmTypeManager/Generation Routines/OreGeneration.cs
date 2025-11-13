@@ -29,7 +29,7 @@ namespace FarmTypeManager
                                 Utility.Monitor.VerboseLog($"Ore generation is disabled for content pack: {data.Pack.Manifest.Name}");
                             else
                                 Utility.Monitor.VerboseLog($"Ore generation is disabled for local file: data/{Constants.SaveFolderName}.json");
-                            
+
                             continue;
                         }
 
