@@ -16,12 +16,12 @@ namespace FarmTypeManager
             /// <returns>True if the file should be used with the current farm; false otherwise.</returns>
             public static bool CheckFileConditions(FarmConfig config, IContentPack pack)
             {
-                Monitor.Log("Checking file conditions...", LogLevel.Trace);
+                Monitor.VerboseLog("Checking file conditions...");
 
                 //check farm type
                 if (config.File_Conditions.FarmTypes != null && config.File_Conditions.FarmTypes.Length > 0)
                 {
-                    Monitor.Log("Farm type condition(s) found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Farm type condition(s) found. Checking...");
 
                     bool validType = false;
 
@@ -62,8 +62,14 @@ namespace FarmTypeManager
                         }
                         else //if this cannot be parsed
                         {
-                            Monitor.Log($"A setting in the FarmTypes list could not be parsed. It was not a string or integer.", LogLevel.Debug);
-                            Monitor.Log($"The setting will be considered false. If it's intended to be a custom farm type, please use its ID number instead of its name.", LogLevel.Debug);
+                            Monitor.Log($"A setting in the FarmTypes list could not be parsed. It was not a string or integer.", LogLevel.Info);
+                            Monitor.Log($"The setting will be considered false. If it's intended to be a custom farm type, please use its ID number instead of its name.", LogLevel.Info);
+                            
+                            if (pack != null)
+                                Monitor.Log($"Mod ID: \"{pack.Manifest.UniqueID}\".", LogLevel.Info);
+                            else
+                                Monitor.Log($"File: \"data/{Constants.SaveFolderName}.json\".", LogLevel.Info);
+                            
                             continue; //skip to the next farm type condition
                         }
 
@@ -76,11 +82,11 @@ namespace FarmTypeManager
 
                     if (validType) //if a valid farm type was listed
                     {
-                        Monitor.Log("Farm type matched a setting. File allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("Farm type matched a setting. File allowed.");
                     }
                     else
                     {
-                        Monitor.Log("Farm type did NOT match any settings. File disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("Farm type did NOT match any settings. File disabled.");
                         return false; //prevent config use
                     }
                 }
@@ -88,7 +94,7 @@ namespace FarmTypeManager
                 //check farmer name
                 if (config.File_Conditions.FarmerNames != null && config.File_Conditions.FarmerNames.Length > 0)
                 {
-                    Monitor.Log("Farmer name condition(s) found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Farmer name condition(s) found. Checking...");
 
                     bool validName = false;
 
@@ -103,11 +109,11 @@ namespace FarmTypeManager
 
                     if (validName) //if a valid farmer name was listed
                     {
-                        Monitor.Log("Farmer name matched a setting. File allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("Farmer name matched a setting. File allowed.");
                     }
                     else
                     {
-                        Monitor.Log("Farmer name did NOT match any settings. File disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("Farmer name did NOT match any settings. File disabled.");
                         return false; //prevent config use
                     }
                 }
@@ -115,7 +121,7 @@ namespace FarmTypeManager
                 //check save file names (technically the save folder name)
                 if (config.File_Conditions.SaveFileNames != null && config.File_Conditions.SaveFileNames.Length > 0)
                 {
-                    Monitor.Log("Save file name condition(s) found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Save file name condition(s) found. Checking...");
 
                     bool validSave = false;
 
@@ -130,11 +136,11 @@ namespace FarmTypeManager
 
                     if (validSave) //if a valid save name was listed
                     {
-                        Monitor.Log("Save file name matched a setting. File allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("Save file name matched a setting. File allowed.");
                     }
                     else
                     {
-                        Monitor.Log("Save file name did NOT match any settings. File disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("Save file name did NOT match any settings. File disabled.");
                         return false; //prevent config use
                     }
                 }
@@ -142,7 +148,7 @@ namespace FarmTypeManager
                 //check whether other mods exist
                 if (config.File_Conditions.OtherMods != null && config.File_Conditions.OtherMods.Count > 0)
                 {
-                    Monitor.Log("Other mod condition(s) found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Other mod condition(s) found. Checking...");
 
                     bool validMods = true; //whether all entries are accurate (true by default, unlike most other settings)
 
@@ -172,11 +178,11 @@ namespace FarmTypeManager
 
                         if (validEntry) //if the current mod entry is valid
                         {
-                            Monitor.Log($"Mod check successful: \"{entry.Key}\" {(entry.Value ? "does exist" : "does not exist")}.", LogLevel.Trace);
+                            Monitor.VerboseLog($"Mod check successful: \"{entry.Key}\" {(entry.Value ? "does exist" : "does not exist")}.");
                         }
                         else //if the current mod entry is NOT valid
                         {
-                            Monitor.Log($"Mod check failed: \"{entry.Key}\" {(entry.Value ? "does not exist" : "does exist")}.", LogLevel.Trace);
+                            Monitor.VerboseLog($"Mod check failed: \"{entry.Key}\" {(entry.Value ? "does not exist" : "does exist")}.");
                             validMods = false;
                             break; //skip the rest of these checks
                         }
@@ -184,11 +190,11 @@ namespace FarmTypeManager
 
                     if (validMods) //if all mod entries in the list are valid
                     {
-                        Monitor.Log("The OtherMods list matches the player's mods. File allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("The OtherMods list matches the player's mods. File allowed.");
                     }
                     else //if any entries were NOT valid
                     {
-                        Monitor.Log("The OtherMods list does NOT match the player's mods. File disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("The OtherMods list does NOT match the player's mods. File disabled.");
                         return false; //prevent config use
                     }
                 }

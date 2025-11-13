@@ -19,7 +19,7 @@ namespace FarmTypeManager
 
             if (Context.IsMainPlayer != true) { return; } //if the player using this mod is a multiplayer farmhand, do nothing
 
-            Utility.Monitor.Log($"Day is starting. Loading config data.", LogLevel.Trace);
+            Utility.Monitor.VerboseLog($"New day started. Reloading data.");
 
             Utility.LoadFarmData(); //load all available data files
 
@@ -27,7 +27,7 @@ namespace FarmTypeManager
             Utility.TimedSpawns.Clear();
             Utility.MonsterTracker.Clear();
 
-            Utility.Monitor.Log($"Checking for saved objects that went missing overnight.", LogLevel.Trace);
+            Utility.Monitor.Log($"Checking for saved objects that need to be respawned overnight or after loading.", LogLevel.Trace);
             foreach (FarmData data in Utility.FarmDataList) //for each loaded set of data
             {
                 if (data.Pack != null) //if this data is from a content pack

@@ -17,12 +17,12 @@ namespace FarmTypeManager
             /// <returns>True if objects are allowed to spawn. False if any extra conditions should prevent spawning.</returns>
             public static bool CheckExtraConditions(SpawnArea area, InternalSaveData save, IManifest packManifest)
             {
-                Monitor.Log($"Checking extra conditions for this area...", LogLevel.Trace);
+                Monitor.VerboseLog($"Checking extra conditions for this area...");
 
                 //check years
                 if (area.ExtraConditions.Years != null && area.ExtraConditions.Years.Length > 0)
                 {
-                    Monitor.Log("Year conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Year conditions found. Checking...");
 
                     bool validYear = false;
 
@@ -71,17 +71,24 @@ namespace FarmTypeManager
                         }
                         catch (Exception)
                         {
-                            Monitor.Log($"Issue: This part of the extra condition \"Years\" for the {area.MapName} map isn't formatted correctly: \"{year}\"", LogLevel.Info);
+                            Monitor.Log($"This part of the extra condition \"Years\" is formatted incorrectly: \"{year}\". This spawn area will be disabled.", LogLevel.Info);
+                            
+                            if (packManifest != null)
+                                Monitor.Log($"Mod ID: \"{packManifest.UniqueID}\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
+                            else
+                                Monitor.Log($"File: \"data/{Constants.SaveFolderName}.json\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
+
+                            return false;
                         }
                     }
 
                     if (validYear)
                     {
-                        Monitor.Log("The current year matched a setting. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("The current year matched a setting. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("The current year did NOT match any settings. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("The current year did NOT match any settings. Spawn disabled.");
                         return false;
                     }
                 }
@@ -89,7 +96,7 @@ namespace FarmTypeManager
                 //check seasons
                 if (area.ExtraConditions.Seasons != null && area.ExtraConditions.Seasons.Length > 0)
                 {
-                    Monitor.Log("Season conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Season conditions found. Checking...");
 
                     bool validSeason = false;
 
@@ -109,11 +116,11 @@ namespace FarmTypeManager
 
                     if (validSeason)
                     {
-                        Monitor.Log("The current season matched a setting. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("The current season matched a setting. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("The current season did NOT match any settings. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("The current season did NOT match any settings. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }
@@ -121,7 +128,7 @@ namespace FarmTypeManager
                 //check days
                 if (area.ExtraConditions.Days != null && area.ExtraConditions.Days.Length > 0)
                 {
-                    Monitor.Log("Day conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Day conditions found. Checking...");
 
                     bool validDay = false;
 
@@ -170,17 +177,24 @@ namespace FarmTypeManager
                         }
                         catch (Exception)
                         {
-                            Monitor.Log($"Issue: This part of the extra condition \"Days\" for the {area.MapName} map isn't formatted correctly: \"{day}\"", LogLevel.Info);
+                            Monitor.Log($"This part of the extra condition \"Days\" is formatted incorrectly: \"{day}\". This spawn area will be disabled.", LogLevel.Info);
+                            
+                            if (packManifest != null)
+                                Monitor.Log($"Mod ID: \"{packManifest.UniqueID}\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
+                            else
+                                Monitor.Log($"File: \"data/{Constants.SaveFolderName}.json\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
+                           
+                            return false;
                         }
                     }
 
                     if (validDay)
                     {
-                        Monitor.Log("The current day matched a setting. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("The current day matched a setting. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("The current day did NOT match any settings. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("The current day did NOT match any settings. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }
@@ -188,7 +202,7 @@ namespace FarmTypeManager
                 //check yesterday's weather
                 if (area.ExtraConditions.WeatherYesterday != null && area.ExtraConditions.WeatherYesterday.Length > 0)
                 {
-                    Monitor.Log("Yesterday's weather conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Yesterday's weather conditions found. Checking...");
 
                     bool validWeather = false;
 
@@ -251,11 +265,11 @@ namespace FarmTypeManager
 
                     if (validWeather)
                     {
-                        Monitor.Log("Yesterday's weather matched a setting. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("Yesterday's weather matched a setting. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("Yesterday's weather did NOT match any settings. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("Yesterday's weather did NOT match any settings. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }
@@ -263,7 +277,7 @@ namespace FarmTypeManager
                 //check today's weather
                 if (area.ExtraConditions.WeatherToday != null && area.ExtraConditions.WeatherToday.Length > 0)
                 {
-                    Monitor.Log("Today's weather conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Today's weather conditions found. Checking...");
 
                     bool validWeather = false;
 
@@ -326,11 +340,11 @@ namespace FarmTypeManager
 
                     if (validWeather)
                     {
-                        Monitor.Log("Today's weather matched a setting. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("Today's weather matched a setting. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("Today's weather did NOT match any settings. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("Today's weather did NOT match any settings. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }
@@ -338,7 +352,7 @@ namespace FarmTypeManager
                 //check tomorrow's weather
                 if (area.ExtraConditions.WeatherTomorrow != null && area.ExtraConditions.WeatherTomorrow.Length > 0)
                 {
-                    Monitor.Log("Tomorrow's weather conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Tomorrow's weather conditions found. Checking...");
 
                     bool validWeather = false;
 
@@ -400,11 +414,11 @@ namespace FarmTypeManager
 
                     if (validWeather)
                     {
-                        Monitor.Log("Tomorrow's weather matched a setting. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("Tomorrow's weather matched a setting. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("Tomorrow's weather did NOT match any settings. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("Tomorrow's weather did NOT match any settings. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }
@@ -412,11 +426,11 @@ namespace FarmTypeManager
                 //check CP conditions
                 if (area.ExtraConditions.CPConditions != null && area.ExtraConditions.CPConditions.Count > 0)
                 {
-                    Monitor.Log($"CP conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog($"CP conditions found. Checking...");
                     if (ContentPatcherAPI == null) //if CP's API is not available
                     {
                         Monitor.LogOnce($"FTM cannot currently access the API for Content Patcher (CP), but at least one spawn area has CP conditions. Those areas will be disabled.", LogLevel.Warn);
-                        Monitor.Log($"CP conditions could not be checked. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog($"CP conditions could not be checked. Spawn disabled.");
                         return false; //prevent spawning
                     }
                     else //if CP's API is available
@@ -429,17 +443,23 @@ namespace FarmTypeManager
 
                             if (conditions.IsMatch) //if this area's CP conditions all match the current game state
                             {
-                                Monitor.Log("CP conditions all currently match. Spawn allowed.", LogLevel.Trace);
+                                Monitor.VerboseLog("CP conditions all currently match. Spawn allowed.");
                             }
                             else if (!conditions.IsValid) //if the conditions are not formatted correctly
                             {
-                                Monitor.Log($"Issue: A Content Patcher (CP) condition for area ID \"{area.UniqueAreaID}\" isn't formatted correctly. Spawn disabled. Error message: \n\"{conditions.ValidationError}\"", LogLevel.Info);
-                                return false; //prevent spawning
+                                Monitor.Log($"A Content Patcher (CP) condition for isn't formatted correctly. This spawn area will be disabled. Error message: \n\"{conditions.ValidationError}\"", LogLevel.Info);
+
+                                if (packManifest != null)
+                                    Monitor.Log($"Mod ID: \"{packManifest.UniqueID}\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
+                                else
+                                    Monitor.Log($"File: \"data/{Constants.SaveFolderName}.json\". Area ID: \"{area.UniqueAreaID}\".", LogLevel.Info);
+
+                                return false;
                             }
                             else
                             {
-                                Monitor.Log($"At least one CP condition does not currently match: \"{conditions.GetReasonNotMatched()}\". Spawn disabled.", LogLevel.Trace);
-                                return false; //prevent spawning
+                                Monitor.VerboseLog($"At least one CP condition does not currently match: \"{conditions.GetReasonNotMatched()}\". Spawn disabled.");
+                                return false;
                             }
                         }
                         catch (Exception ex)
@@ -447,7 +467,7 @@ namespace FarmTypeManager
                             Monitor.Log($"An error occurred while FTM was using the API for Content Patcher (CP). Please report this to FTM's developer. Auto-generated error message:", LogLevel.Error);
                             Monitor.Log($"----------", LogLevel.Error);
                             Monitor.Log($"{ex.ToString()}", LogLevel.Error);
-                            Monitor.Log($"CP conditions could not be checked. Spawn disabled.", LogLevel.Trace);
+                            Monitor.VerboseLog($"CP conditions could not be checked. Spawn disabled.");
                             return false;
                         }
                     }
@@ -456,11 +476,11 @@ namespace FarmTypeManager
                 //check EPU preconditions
                 if (area.ExtraConditions.EPUPreconditions != null && area.ExtraConditions.EPUPreconditions.Length > 0)
                 {
-                    Monitor.Log($"EPU conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog($"EPU conditions found. Checking...");
                     if (EPUConditionsChecker == null) //if EPU's API is not available
                     {
                         Monitor.LogOnce($"FTM cannot currently access the API for Expanded Preconditions Utility (EPU), but at least one spawn area has EPU preconditions. Those areas will be disabled. Please make sure EPU is installed.", LogLevel.Warn);
-                        Monitor.Log($"EPU preconditions could not be checked. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog($"EPU preconditions could not be checked. Spawn disabled.");
                         return false; //prevent spawning
                     }
                     else //if EPU's API is available
@@ -469,11 +489,11 @@ namespace FarmTypeManager
                         {
                             if (EPUConditionsChecker.CheckConditions(area.ExtraConditions.EPUPreconditions) == true) //if ANY of this area's precondition strings are true
                             {
-                                Monitor.Log("At least one EPU precondition string was valid. Spawn allowed.", LogLevel.Trace);
+                                Monitor.VerboseLog("At least one EPU precondition string was valid. Spawn allowed.");
                             }
                             else //if ALL of this area's precondition strings are false
                             {
-                                Monitor.Log("All EPU precondition strings were invalid. Spawn disabled.", LogLevel.Trace);
+                                Monitor.VerboseLog("All EPU precondition strings were invalid. Spawn disabled.");
                                 return false; //prevent spawning
                             }
                         }
@@ -482,7 +502,7 @@ namespace FarmTypeManager
                             Monitor.Log($"An error occurred while FTM was using the API for Expanded Preconditions Utility (EPU). Please report this to FTM's developer. Auto-generated error message:", LogLevel.Error);
                             Monitor.Log($"----------", LogLevel.Error);
                             Monitor.Log($"{ex.ToString()}", LogLevel.Error);
-                            Monitor.Log($"EPU preconditions could not be checked. Spawn disabled.", LogLevel.Trace);
+                            Monitor.VerboseLog($"EPU preconditions could not be checked. Spawn disabled.");
                             return false;
                         }
                     }
@@ -491,7 +511,7 @@ namespace FarmTypeManager
                 //check game state queries (GSQs)
                 if (area.ExtraConditions.GameStateQueries != null && area.ExtraConditions.GameStateQueries.Length > 0)
                 {
-                    Monitor.Log("GSQ conditions found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("GSQ conditions found. Checking...");
 
                     bool validGSQ = false;
 
@@ -506,11 +526,11 @@ namespace FarmTypeManager
 
                     if (validGSQ)
                     {
-                        Monitor.Log("At least one game state query (GSQ) string was valid. Spawn allowed.", LogLevel.Trace);
+                        Monitor.VerboseLog("At least one game state query (GSQ) string was valid. Spawn allowed.");
                     }
                     else
                     {
-                        Monitor.Log("All game state query (GSQ) strings were invalid. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog("All game state query (GSQ) strings were invalid. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }
@@ -519,35 +539,35 @@ namespace FarmTypeManager
                 //NOTE: it's important that this is the last condition checked, because otherwise it might count down while not actually spawning (i.e. while blocked by another condition)
                 if (area.ExtraConditions.LimitedNumberOfSpawns != null)
                 {
-                    Monitor.Log("Limited Number Of Spawns condition found. Checking...", LogLevel.Trace);
+                    Monitor.VerboseLog("Limited Number Of Spawns condition found. Checking...");
                     if (area.ExtraConditions.LimitedNumberOfSpawns > 0) //if there's at least one spawn day for this area
                     {
                         //if save data already exists for this area
                         if (save.LNOSCounter.ContainsKey(area.UniqueAreaID))
                         {
-                            Monitor.Log("Sava data found for this area; checking spawn days counter...", LogLevel.Trace);
+                            Monitor.VerboseLog("Sava data found for this area; checking spawn days counter...");
                             //if there's still at least one spawn day remaining
                             if ((area.ExtraConditions.LimitedNumberOfSpawns - save.LNOSCounter[area.UniqueAreaID]) > 0)
                             {
-                                Monitor.Log($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns - save.LNOSCounter[area.UniqueAreaID]}. Spawn allowed.", LogLevel.Trace);
+                                Monitor.VerboseLog($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns - save.LNOSCounter[area.UniqueAreaID]}. Spawn allowed.");
                                 save.LNOSCounter[area.UniqueAreaID]++; //increment (NOTE: this change needs to be saved at the end of the day)
                             }
                             else //no spawn days remaining
                             {
-                                Monitor.Log($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns - save.LNOSCounter[area.UniqueAreaID]}. Spawn disabled.", LogLevel.Trace);
+                                Monitor.VerboseLog($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns - save.LNOSCounter[area.UniqueAreaID]}. Spawn disabled.");
                                 return false; //prevent spawning
                             }
                         }
                         else //no save file exists for this area; behave as if LNOSCounter == 0
                         {
-                            Monitor.Log("No save data found for this area; creating new counter.", LogLevel.Trace);
+                            Monitor.VerboseLog("No save data found for this area; creating new counter.");
                             save.LNOSCounter.Add(area.UniqueAreaID, 1); //new counter for this area, starting at 1
-                            Monitor.Log($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns}. Spawn allowed.", LogLevel.Trace);
+                            Monitor.VerboseLog($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns}. Spawn allowed.");
                         }
                     }
                     else //no spawns remaining
                     {
-                        Monitor.Log($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns}. Spawn disabled.", LogLevel.Trace);
+                        Monitor.VerboseLog($"Spawns remaining (including today): {area.ExtraConditions.LimitedNumberOfSpawns}. Spawn disabled.");
                         return false; //prevent spawning
                     }
                 }

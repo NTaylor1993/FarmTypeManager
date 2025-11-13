@@ -19,7 +19,7 @@ namespace FarmTypeManager
         /// <summary>Loads and respawns custom entities after a mid-day save event.</summary>
         private void AfterMidDaySave()
         {
-            Utility.Monitor.Log($"Mid-day save event ended. Restoring custom objects/data.", LogLevel.Trace);
+            Utility.Monitor.Log($"Mid-day save event complete. Checking for saved objects that need to be respawned after saving.", LogLevel.Trace);
 
             //note: do not clear Utility.TimedSpawns here; that should only happen when in the DayStarted event, which currently happens whenever saves are loaded (even "mid-day" ones)
 

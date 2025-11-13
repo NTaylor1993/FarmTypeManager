@@ -17,11 +17,11 @@ namespace FarmTypeManager
             {
                 if (pack != null)
                 {
-                    Monitor.Log($"Validating data from content pack: {pack.Manifest.Name}", LogLevel.Trace);
+                    Monitor.VerboseLog($"Validating data from content pack: {pack.Manifest.Name}");
                 }
                 else
                 {
-                    Monitor.Log("Validating data from FarmTypeManager/data", LogLevel.Trace);
+                    Monitor.VerboseLog("Validating data from FarmTypeManager/data");
                 }
 
                 List<SpawnArea[]> allAreas = new List<SpawnArea[]>(); //a unified list of each "Areas" array in this config file
@@ -43,7 +43,7 @@ namespace FarmTypeManager
                     allAreas.Add(config.Monster_Spawn_Settings.Areas);
                 }
 
-                Monitor.Log("Checking for duplicate UniqueAreaIDs...", LogLevel.Trace);
+                Monitor.VerboseLog("Checking for duplicate UniqueAreaIDs...");
                 HashSet<string> IDs = new HashSet<string>(); //a record of all unique IDs encountered during this process
 
                 //erase any duplicate IDs and record the others in the "IDs" hashset
@@ -58,11 +58,11 @@ namespace FarmTypeManager
 
                         if (IDs.Contains(area.UniqueAreaID)) //if this area's ID was already encountered
                         {
-                            Monitor.Log($"Duplicate UniqueAreaID found: \"{area.UniqueAreaID}\" will be renamed.", LogLevel.Debug);
+                            Monitor.VerboseLog($"Duplicate UniqueAreaID found: \"{area.UniqueAreaID}\" will be renamed.");
                             if (pack != null) //if this config is from a content pack
                             {
-                                Monitor.Log($"Content pack: {pack.Manifest.Name}", LogLevel.Info);
-                                Monitor.Log($"If this happened after updating another mod, it might cause certain conditions (such as one-time-only spawns) to reset in that area.", LogLevel.Debug);
+                                Monitor.VerboseLog($"Content pack: {pack.Manifest.Name}");
+                                Monitor.VerboseLog($"If this happened after updating another mod, it might cause certain conditions (such as one-time-only spawns) to reset in that area.");
                             }
 
                             area.UniqueAreaID = ""; //erase this area's ID, marking it for replacement
@@ -74,7 +74,7 @@ namespace FarmTypeManager
                     }
                 }
 
-                Monitor.Log("Assigning new UniqueAreaIDs to any blanks or duplicates...", LogLevel.Trace);
+                Monitor.VerboseLog("Assigning new UniqueAreaIDs to any blanks or duplicates...");
                 string newName; //temp storage for a new ID while it's created/tested
                 int newNumber; //temp storage for the numeric part of a new ID
 
@@ -101,7 +101,7 @@ namespace FarmTypeManager
                             }
 
                             area.UniqueAreaID = newName + newNumber; //apply the new unique ID
-                            Monitor.Log($"New UniqueAreaID assigned: {area.UniqueAreaID}", LogLevel.Trace);
+                            Monitor.VerboseLog($"New UniqueAreaID assigned: {area.UniqueAreaID}");
                         }
 
                         IDs.Add(area.UniqueAreaID); //the ID is finalized, so add it to the set of encountered IDs
@@ -120,7 +120,7 @@ namespace FarmTypeManager
                             int temp = area.MinimumSpawnsPerDay;
                             area.MinimumSpawnsPerDay = area.MaximumSpawnsPerDay;
                             area.MaximumSpawnsPerDay = temp;
-                            Monitor.Log($"Swapping minimum and maximum spawns per day for this area: {area.UniqueAreaID}", LogLevel.Trace);
+                            Monitor.VerboseLog($"Swapping minimum and maximum spawns per day for this area: {area.UniqueAreaID}");
                         }
 
                         if (area.SpawnTiming.StartTime > area.SpawnTiming.EndTime) //if start and end are in the wrong order
@@ -129,7 +129,7 @@ namespace FarmTypeManager
                             StardewTime temp = area.SpawnTiming.StartTime;
                             area.SpawnTiming.StartTime = area.SpawnTiming.EndTime;
                             area.SpawnTiming.EndTime = temp;
-                            Monitor.Log($"Swapping StartTime and EndTime in the SpawnTiming settings for this area: {area.UniqueAreaID}", LogLevel.Trace);
+                            Monitor.VerboseLog($"Swapping StartTime and EndTime in the SpawnTiming settings for this area: {area.UniqueAreaID}");
                         }
                     }
                 }
@@ -147,14 +147,11 @@ namespace FarmTypeManager
                                 {
                                     Monitor.Log($"This spawn area's IncludeCoordinates and IncludeTerrainTypes are both empty, which means it has no valid spawn tiles.", LogLevel.Debug);
                                     Monitor.Log($"Area: {area.UniqueAreaID}", LogLevel.Debug);
-                                    if (pack != null) //if this file is from a content pack
-                                    {
+
+                                    if (pack != null)
                                         Monitor.Log($"Content pack: {pack.Manifest.Name}", LogLevel.Debug);
-                                    }
-                                    else //if this file is from FarmTypeManager/data
-                                    {
-                                        Monitor.Log($"File: FarmTypeManager/data/{Constants.SaveFolderName}.json", LogLevel.Debug);
-                                    }
+                                    else
+                                        Monitor.Log($"File: data/{Constants.SaveFolderName}.json", LogLevel.Debug);
                                 }
                             }
                         }
@@ -178,27 +175,21 @@ namespace FarmTypeManager
                                 Monitor.Log($"This spawn sound could not be found: {area.SpawnTiming.SpawnSound}", LogLevel.Debug);
                                 Monitor.Log($"Please make sure the sound's name is spelled and capitalized correctly. Sound names are case-sensitive.", LogLevel.Debug);
                                 Monitor.Log($"Area: {area.UniqueAreaID}", LogLevel.Debug);
-                                if (pack != null) //if this file is from a content pack
-                                {
+
+                                if (pack != null)
                                     Monitor.Log($"Content pack: {pack.Manifest.Name}", LogLevel.Debug);
-                                }
-                                else //if this file is from FarmTypeManager/data
-                                {
-                                    Monitor.Log($"File: FarmTypeManager/data/{Constants.SaveFolderName}.json", LogLevel.Debug);
-                                }
+                                else
+                                    Monitor.Log($"File: data/{Constants.SaveFolderName}.json", LogLevel.Debug);
                             }
                         }
                     }
                 }
 
                 if (pack != null)
-                {
-                    Monitor.Log($"Validation complete for content pack: {pack.Manifest.Name}", LogLevel.Trace);
-                }
+                    Monitor.VerboseLog($"Validation complete for content pack: {pack.Manifest.Name}");
                 else
-                {
-                    Monitor.Log("Validation complete for data from FarmTypeManager/data", LogLevel.Trace);
-                }
+                    Monitor.VerboseLog($"Validation complete for file: data/{Constants.SaveFolderName}.json");
+
                 return;
             }
         }

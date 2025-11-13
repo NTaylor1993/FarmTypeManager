@@ -445,7 +445,8 @@ namespace FarmTypeManager
 
                 }
 
-                Monitor.Log($"Object check complete. Removing {objectsToRemove.Count} missing/expired objects from save data.", LogLevel.Trace);
+                Monitor.VerboseLog($"Object expiration check complete. Removing {objectsToRemove.Count} missing/expired objects from save data.");
+                
                 foreach (SavedObject saved in objectsToRemove) //for each object that should be removed from the save data
                 {
                     save.SavedObjects.Remove(saved); //remove it

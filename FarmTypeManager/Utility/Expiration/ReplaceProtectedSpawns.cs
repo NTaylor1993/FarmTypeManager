@@ -18,8 +18,8 @@ namespace FarmTypeManager
             public static void ReplaceProtectedSpawns(InternalSaveData save)
             {
                 int missing = 0; //# of objects missing
-                int blocked = 0; //# of objects that could not respawn due to blocked locations
                 int respawned = 0; //# of objects respawned
+                int blocked = 0; //# of objects that could not respawn due to blocked locations
                 int unloaded = 0; //# of objects skipped due to missing (unloaded) or invalid map names
                 int uninstalled = 0; //# of objects skipped due to missing object data, generally caused by removed mods
 
@@ -335,7 +335,10 @@ namespace FarmTypeManager
                     }
                 }
 
-                Monitor.Log($"Missing objects: {missing}. Respawned: {respawned}. Not respawned due to obstructions: {blocked}. Skipped due to missing maps: {unloaded}. Skipped due to missing item types: {uninstalled}.", LogLevel.Trace);
+                if (missing > 0 || respawned > 0 || blocked > 0 || unloaded > 0 || uninstalled > 0)
+                    Monitor.Log($"Missing objects: {missing}. Respawned: {respawned}. Not respawned due to obstructions: {blocked}. Skipped due to missing maps: {unloaded}. Skipped due to missing item types: {uninstalled}.", LogLevel.Trace);
+                else
+                    Monitor.VerboseLog($"No objects from this data were missing.");
             }
         }
     }

@@ -13,7 +13,7 @@ namespace FarmTypeManager
             /// <summary>Loads all available data files for the current farm into FarmDataList. Checks the mod's data folder and any relevant content packs.</summary>
             public static void LoadFarmData()
             {
-                Monitor.Log("Beginning file loading process...", LogLevel.Trace);
+                Monitor.Log("Loading content packs and local data files.", LogLevel.Trace);
 
                 //clear any existing farm data
                 FarmDataList = new List<FarmData>();
@@ -26,7 +26,7 @@ namespace FarmTypeManager
                     //load data from each relevant content pack
                     foreach (IContentPack pack in Helper.ContentPacks.GetOwned())
                     {
-                        Monitor.Log($"Loading files from content pack: {pack.Manifest.Name}", LogLevel.Trace);
+                        Monitor.VerboseLog($"Loading files from content pack: {pack.Manifest.Name}");
 
                         //clear each temp object
                         config = null;
@@ -81,22 +81,22 @@ namespace FarmTypeManager
                         if (CheckFileConditions(config, pack)) //check file conditions; only use the current data if this returns true
                         {
                             FarmDataList.Add(new FarmData(config, save, pack)); //add the config, save, and content pack to the farm data list
-                            Monitor.Log("Content pack loaded successfully.", LogLevel.Trace);
+                            Monitor.VerboseLog("Content pack loaded successfully.");
                         }
                     }
 
-                    Monitor.Log("All available content packs checked.", LogLevel.Trace);
+                    Monitor.VerboseLog("All available content packs loaded.");
                 }
                 else
                 {
-                    Monitor.Log("Content packs are disabled in config.json. Skipping to local files...", LogLevel.Trace);
+                    Monitor.VerboseLog("Content packs are disabled in config.json. Skipping to local files...");
                 }
 
                 //clear each temp object
                 config = null;
                 save = null;
 
-                Monitor.Log("Loading files from FarmTypeManager/data", LogLevel.Trace);
+                Monitor.VerboseLog("Loading files from FarmTypeManager/data...");
 
                 //attempt to load the farm config from this mod's data folder
                 //NOTE: this should always be done *after* content packs, because it will end the loading process if an error occurs
@@ -169,7 +169,7 @@ namespace FarmTypeManager
                 if (CheckFileConditions(config, null)) //check file conditions; only use the current data if this returns true
                 {
                     FarmDataList.Add(new FarmData(config, save, null)); //add the config, save, and a *null* content pack to the farm data list
-                    Monitor.Log("FarmTypeManager/data farm data loaded successfully.", LogLevel.Trace);
+                    Monitor.VerboseLog("FarmTypeManager/data farm data loaded successfully.");
                 }
             }
         }
