@@ -44,6 +44,9 @@ namespace FarmTypeManager
 
                 for (int index = 0; index < TileList.Count; index++) //for each listed tile
                 {
+                    if (InvalidTiles.Contains(TileList[index])) //skip tiles already known to be invalid
+                        continue;
+
                     bool allTilesValid = true;
 
                     //for each tile necessary for the given size
@@ -55,12 +58,7 @@ namespace FarmTypeManager
 
                             if (InvalidTiles.Contains(tileToCheck) || !Utility.IsTileValid(Location, tileToCheck, new Point(1, 1), StrictTileChecking)) //if the tile being checked is NOT valid
                             {
-                                int indexOfInvalidTile = TileList.IndexOf(tileToCheck); //get this invalid tile's index in the tile list (-1 if it's not in the list)
-                                if (indexOfInvalidTile >= 0 && indexOfInvalidTile <= index) //if the invalid tile is in the list, before/at the current index
-                                    index--; //decrement by 1 before removal, to avoid looping errors
-
-                                TileList.Remove(tileToCheck); //remove the tile from the list, if it was present
-                                InvalidTiles.Add(tileToCheck); //add the tile to the "invalid tiles" list
+                                InvalidTiles.Add(tileToCheck); //add the tile to the "invalid tiles" set
 
                                 allTilesValid = false;
                                 break; //skip the rest of the "y" loop
@@ -79,10 +77,6 @@ namespace FarmTypeManager
                         TileList.RemoveAt(index);
 
                         return finalTile;
-                    }
-                    else //if a tile was invalid
-                    {
-                        continue; //skip to the next tile index
                     }
                 }
 
