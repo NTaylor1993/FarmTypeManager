@@ -130,6 +130,13 @@ namespace FarmTypeManager
                                 List<SavedObject> spawns = new List<SavedObject>(); //the list of objects to be spawned
                                 int skippedSpawns = 0; //the number of objects skipped due to their spawn chances
 
+                                //get the total spawn weight of available forage types
+                                int totalWeight = 0;
+                                foreach (SavedObject obj in forageObjects) //for each object in the forage list
+                                {
+                                    totalWeight += obj.ConfigItem?.SpawnWeight ?? 1; //increment total weight by this object's spawn weight (default 1)
+                                }
+
                                 //begin to generate forage
                                 while (spawnCount > 0) //while more forage should be spawned
                                 {
