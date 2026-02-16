@@ -63,9 +63,11 @@ namespace FarmTypeManager
             /// <returns>A new MonsterType with identical property values.</returns>
             public MonsterType DeepCopy()
             {
-                MonsterType copy = new MonsterType();
-                copy.MonsterName = this.MonsterName;
-                copy.settings = new Dictionary<string, object>(this.settings, StringComparer.OrdinalIgnoreCase); //copy dictionary directly to backing field, preserving case-insensitive comparer
+                MonsterType copy = new()
+                {
+                    MonsterName = MonsterName,
+                    settings = new Dictionary<string, object>(settings, StringComparer.OrdinalIgnoreCase) //copy dictionary directly to backing field, preserving case-insensitive comparer
+                };
                 return copy;
             }
         }

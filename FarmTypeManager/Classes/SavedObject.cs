@@ -192,16 +192,18 @@ namespace FarmTypeManager
             /// <returns>A new SavedObject with identical property values.</returns>
             public SavedObject DeepCopy()
             {
-                SavedObject copy = new SavedObject();
-                copy.MapName = this.MapName;
-                copy.Name = this.Name;
-                copy.Tile = this.Tile; //Vector2 is a value type
-                copy.Type = this.Type; //enum is a value type
-                copy.ID = this.ID; //null, boxed int, or string (immutable) -- safe to share reference
-                copy.DaysUntilExpire = this.DaysUntilExpire;
-                copy.SpawnTime = this.SpawnTime; //StardewTime is a struct (value type)
-                copy.ConfigItem = this.ConfigItem?.DeepCopy();
-                copy.MonType = this.MonType?.DeepCopy();
+                SavedObject copy = new()
+                {
+                    MapName = MapName,
+                    Name = Name,
+                    Tile = Tile, //Vector2 is a value type
+                    Type = Type, //enum is a value type
+                    ID = ID, //null, boxed int, or string (immutable) -- safe to share reference
+                    DaysUntilExpire = DaysUntilExpire,
+                    SpawnTime = SpawnTime, //StardewTime is a struct (value type)
+                    ConfigItem = ConfigItem?.DeepCopy(),
+                    MonType = MonType?.DeepCopy()
+                };
                 return copy;
             }
         }
