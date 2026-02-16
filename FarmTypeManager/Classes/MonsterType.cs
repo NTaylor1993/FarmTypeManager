@@ -58,6 +58,16 @@ namespace FarmTypeManager
                 MonsterName = monsterName;
                 Settings = settings;
             }
+
+            /// <summary>Creates a deep copy of this MonsterType. Faster alternative to JSON-based cloning.</summary>
+            /// <returns>A new MonsterType with identical property values.</returns>
+            public MonsterType DeepCopy()
+            {
+                MonsterType copy = new MonsterType();
+                copy.MonsterName = this.MonsterName;
+                copy.settings = new Dictionary<string, object>(this.settings, StringComparer.OrdinalIgnoreCase); //copy dictionary directly to backing field, preserving case-insensitive comparer
+                return copy;
+            }
         }
     }
 }

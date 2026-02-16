@@ -90,6 +90,26 @@ namespace FarmTypeManager
             {
 
             }
+
+            /// <summary>Creates a deep copy of this ConfigItem. Faster alternative to JSON-based cloning.</summary>
+            /// <returns>A new ConfigItem with identical property values.</returns>
+            public ConfigItem DeepCopy()
+            {
+                ConfigItem copy = new()
+                {
+                    CanBePickedUp = CanBePickedUp,
+                    Category = Category,
+                    IsOn = IsOn,
+                    Name = Name,
+                    PercentChanceToSpawn = PercentChanceToSpawn,
+                    Rotation = Rotation,
+                    SpawnWeight = SpawnWeight,
+                    Stack = Stack
+                };
+                if (Contents != null)
+                    copy.Contents = [.. Contents]; //shallow copy of the list; elements are JObjects/primitives that are not mutated after deserialization
+                return copy;
+            }
         }
     }
 }
