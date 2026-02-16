@@ -92,17 +92,19 @@ namespace FarmTypeManager
 
                                 List<SavedObject> spawns = new List<SavedObject>(); //the list of objects to be spawned
 
+                                //get the total spawn weight of ore chances
+                                int totalWeight = 0; //the upper limit for the random number that picks ore type (i.e. the sum of all ore chances)
+                                foreach (KeyValuePair<string, int> ore in oreChances)
+                                {
+                                    totalWeight += ore.Value; //sum up all the ore chances
+                                }
+
                                 //begin to generate ore
                                 int randomOreNum;
                                 while (spawnCount > 0) //while more ore should be spawned
                                 {
                                     spawnCount--;
 
-                                    int totalWeight = 0; //the upper limit for the random number that picks ore type (i.e. the sum of all ore chances)
-                                    foreach (KeyValuePair<string, int> ore in oreChances)
-                                    {
-                                        totalWeight += ore.Value; //sum up all the ore chances
-                                    }
                                     randomOreNum = Utility.RNG.Next(totalWeight); //generate random number from 0 to [totalWeight - 1]
                                     foreach (KeyValuePair<string, int> ore in oreChances)
                                     {

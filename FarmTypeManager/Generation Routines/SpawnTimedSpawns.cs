@@ -39,8 +39,16 @@ namespace FarmTypeManager
                         }
                         else //if a time was provided
                         {
-                            spawns = timedSpawns[x].Where(filter).ToList(); //get a list of spawns with matching times
-                            timedSpawns[x].RemoveAll(filter); //remove the matching spawns from the original list
+                            //collect matching spawns and remove them from the original list in a single pass
+                            spawns = new List<TimedSpawn>();
+                            for (int i = timedSpawns[x].Count - 1; i >= 0; i--)
+                            {
+                                if (filter(timedSpawns[x][i]))
+                                {
+                                    spawns.Add(timedSpawns[x][i]);
+                                    timedSpawns[x].RemoveAt(i);
+                                }
+                            }
 
                             if (timedSpawns[x].Count <= 0) //if the original list is now empty
                             {
@@ -101,7 +109,14 @@ namespace FarmTypeManager
 
                                 if (Utility.MConfig.MonsterLimitPerLocation.HasValue) //if a per-location monster limit was provided
                                 {
-                                    monstersAtLocation = location.characters.Count(character => character is Monster); //get the number of monsters at this location
+                                    //count monsters at this location
+                                    int monsterCount = 0;
+                                    foreach (var character in location.characters)
+                                    {
+                                        if (character is Monster)
+                                            monsterCount++;
+                                    }
+                                    monstersAtLocation = monsterCount;
                                 }
                                 break;
                         }
@@ -171,7 +186,7 @@ namespace FarmTypeManager
 
                                 if (spawns[y].SavedObject.DaysUntilExpire.HasValue) //if this object has an expiration date
                                 {
-                                    SavedObject saved = Utility.Clone(spawns[y].SavedObject); //clone this object to avoid any accidental modification
+                                    SavedObject saved = spawns[y].SavedObject.DeepCopy(); //clone this object to avoid any accidental modification
                                     spawns[y].FarmData.Save.SavedObjects.Add(saved); //add the spawn to the relevant save data
                                 }
                             }

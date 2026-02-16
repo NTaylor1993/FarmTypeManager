@@ -74,24 +74,24 @@ namespace FarmTypeManager
 
                                 List<SavedObject> spawns = new List<SavedObject>(); //the list of objects to be spawned
 
+                                //get the total spawn weight of valid monster types
+                                int totalWeight = 0;
+                                foreach (MonsterType type in validMonsterTypes) //for each valid monster type
+                                {
+                                    if (type.Settings.ContainsKey("SpawnWeight")) //if a custom spawn weight was provided
+                                    {
+                                        totalWeight += Convert.ToInt32(type.Settings["SpawnWeight"]);
+                                    }
+                                    else //if no spawn weight was provided
+                                    {
+                                        totalWeight += 1;
+                                    }
+                                }
+
                                 //begin to generate monsters
                                 while (spawnCount > 0) //while more monsters should be spawned
                                 {
                                     spawnCount--;
-
-                                    //get the total spawn weight of valid monster types
-                                    int totalWeight = 0;
-                                    foreach (MonsterType type in validMonsterTypes) //for each valid monster type
-                                    {
-                                        if (type.Settings.ContainsKey("SpawnWeight")) //if a custom spawn weight was provided
-                                        {
-                                            totalWeight += Convert.ToInt32(type.Settings["SpawnWeight"]);
-                                        }
-                                        else //if no spawn weight was provided
-                                        {
-                                            totalWeight += 1;
-                                        }
-                                    }
 
                                     //select a random monster using spawn weights
                                     MonsterType randomMonster = null;
@@ -107,7 +107,7 @@ namespace FarmTypeManager
 
                                         if (random < spawnWeight) //if this monster type is selected
                                         {
-                                            randomMonster = Utility.Clone(validMonsterTypes[m]); //get the selected monster type (cloned for later use as a unique instance)
+                                            randomMonster = validMonsterTypes[m].DeepCopy(); //get the selected monster type (cloned for later use as a unique instance)
                                             break;
                                         }
                                         else //if this monster type is not selected

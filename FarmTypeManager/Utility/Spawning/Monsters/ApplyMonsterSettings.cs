@@ -65,17 +65,19 @@ namespace FarmTypeManager
                     //parse the provided skill into an enum
                     Utility.Skills skill = (Utility.Skills)Enum.Parse(typeof(Utility.Skills), ((string)settings["RelatedSkill"]).Trim(), true); //parse while trimming whitespace and ignoring case
 
+                    //get highest skill level among all existing farmers once
+                    int highestSkillLevel = 0;
+                    foreach (Farmer farmer in Game1.getAllFarmers())
+                    {
+                        highestSkillLevel = Math.Max(highestSkillLevel, farmer.getEffectiveSkillLevel((int)skill)); //record the new level if it's higher than before
+                    }
+
                     //multiply HP
                     if (settings.ContainsKey("PercentExtraHPPerSkillLevel"))
                     {
                         //calculate HP multiplier based on skill level
                         double skillMultiplier = Convert.ToInt32(settings["PercentExtraHPPerSkillLevel"]);
                         skillMultiplier = (skillMultiplier / 100); //converted to percent, e.g. "10" (10% per level) converts to "0.1"
-                        int highestSkillLevel = 0; //highest skill level among all existing farmers, not just the host
-                        foreach (Farmer farmer in Game1.getAllFarmers())
-                        {
-                            highestSkillLevel = Math.Max(highestSkillLevel, farmer.getEffectiveSkillLevel((int)skill)); //record the new level if it's higher than before
-                        }
                         skillMultiplier = 1.0 + (skillMultiplier * highestSkillLevel); //final multiplier; e.g. if the setting is "10", this is "1.0" at level 0, "1.7" at level 7, etc
 
                         //apply the multiplier to the monster's max HP
@@ -89,11 +91,6 @@ namespace FarmTypeManager
                         //calculate damage multiplier based on skill level
                         double skillMultiplier = Convert.ToInt32(settings["PercentExtraDamagePerSkillLevel"]);
                         skillMultiplier = (skillMultiplier / 100); //converted to percent, e.g. "10" (10% per level) converts to "0.1"
-                        int highestSkillLevel = 0; //highest skill level among all existing farmers, not just the host
-                        foreach (Farmer farmer in Game1.getAllFarmers())
-                        {
-                            highestSkillLevel = Math.Max(highestSkillLevel, farmer.getEffectiveSkillLevel((int)skill)); //record the new level if it's higher than before
-                        }
                         skillMultiplier = 1.0 + (skillMultiplier * highestSkillLevel); //final multiplier; e.g. if the setting is "10", this is "1.0" at level 0, "1.7" at level 7, etc
 
                         //apply the multiplier to the monster's damage
@@ -107,11 +104,6 @@ namespace FarmTypeManager
                         //calculate defense multiplier based on skill level
                         double skillMultiplier = Convert.ToInt32(settings["PercentExtraDefensePerSkillLevel"]);
                         skillMultiplier = (skillMultiplier / 100); //converted to percent, e.g. "10" (10% per level) converts to "0.1"
-                        int highestSkillLevel = 0; //highest skill level among all existing farmers, not just the host
-                        foreach (Farmer farmer in Game1.getAllFarmers())
-                        {
-                            highestSkillLevel = Math.Max(highestSkillLevel, farmer.getEffectiveSkillLevel((int)skill)); //record the new level if it's higher than before
-                        }
                         skillMultiplier = 1.0 + (skillMultiplier * highestSkillLevel); //final multiplier; e.g. if the setting is "10", this is "1.0" at level 0, "1.7" at level 7, etc
 
                         //apply the multiplier to the monster's defense
@@ -125,11 +117,6 @@ namespace FarmTypeManager
                         //calculate dodge chance multiplier based on skill level
                         double skillMultiplier = Convert.ToInt32(settings["PercentExtraDodgeChancePerSkillLevel"]);
                         skillMultiplier = (skillMultiplier / 100); //converted to percent, e.g. "10" (10% per level) converts to "0.1"
-                        int highestSkillLevel = 0; //highest skill level among all existing farmers, not just the host
-                        foreach (Farmer farmer in Game1.getAllFarmers())
-                        {
-                            highestSkillLevel = Math.Max(highestSkillLevel, farmer.getEffectiveSkillLevel((int)skill)); //record the new level if it's higher than before
-                        }
                         skillMultiplier = 1.0 + (skillMultiplier * highestSkillLevel); //final multiplier; e.g. if the setting is "10", this is "1.0" at level 0, "1.7" at level 7, etc
 
                         //apply the multiplier to the monster's dodge chance
@@ -143,11 +130,6 @@ namespace FarmTypeManager
                         //calculate exp multiplier based on skill level
                         double skillMultiplier = Convert.ToInt32(settings["PercentExtraEXPPerSkillLevel"]);
                         skillMultiplier = (skillMultiplier / 100); //converted to percent, e.g. "10" (10% per level) converts to "0.1"
-                        int highestSkillLevel = 0; //highest skill level among all existing farmers, not just the host
-                        foreach (Farmer farmer in Game1.getAllFarmers())
-                        {
-                            highestSkillLevel = Math.Max(highestSkillLevel, farmer.getEffectiveSkillLevel((int)skill)); //record the new level if it's higher than before
-                        }
                         skillMultiplier = 1.0 + (skillMultiplier * highestSkillLevel); //final multiplier; e.g. if the setting is "10", this is "1.0" at level 0, "1.7" at level 7, etc
 
                         //apply the multiplier to the monster's exp
@@ -159,7 +141,7 @@ namespace FarmTypeManager
                 //set loot (i.e. items dropped on death by the monster)
                 if (settings.ContainsKey("Loot"))
                 {
-                    List<SavedObject> loot = ((JArray)settings["Loot"]).ToObject<List<SavedObject>>(); //cast this list of saved objects (already validated and parsed elsewhere)
+                    List<SavedObject> loot = (List<SavedObject>)settings["Loot"]; //cast this list of saved objects (already validated and parsed in ValidateMonsterTypes)
                     MonsterTracker.SetLoot(monster, loot); //set the monster's loot in the monster tracker
                     monster.objectsToDrop.Clear(); //clear any "default" loot the monster might've had
                 }

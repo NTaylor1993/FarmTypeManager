@@ -142,14 +142,6 @@ namespace FarmTypeManager
                                 {
                                     spawnCount--;
 
-                                    //get the total spawn weight of available forage types
-                                    int totalWeight = 0;
-
-                                    foreach (SavedObject obj in forageObjects) //for each object in the forage list
-                                    {
-                                        totalWeight += obj.ConfigItem?.SpawnWeight ?? 1; //increment total weight by this object's spawn weight (default 1)
-                                    }
-
                                     //select a random forage type
                                     SavedObject randomForage = null;
 
@@ -182,7 +174,7 @@ namespace FarmTypeManager
                                         Name = randomForage.Name,
                                         ID = randomForage.ID,
                                         DaysUntilExpire = area.DaysUntilSpawnsExpire,
-                                        ConfigItem = Utility.Clone(randomForage.ConfigItem) //use a separate copy of this
+                                        ConfigItem = randomForage.ConfigItem?.DeepCopy() //use a separate copy of this
                                     };
 
                                     //if this object has contents with spawn chances, process them

@@ -25,7 +25,11 @@ namespace FarmTypeManager
                     return new List<MonsterType>(); //return an empty list
                 }
 
-                List<MonsterType> validTypes = Clone(monsterTypes); //create a new copy of the list, to be validated and returned
+                List<MonsterType> validTypes = new List<MonsterType>(monsterTypes.Count); //create a new copy of the list, to be validated and returned
+                foreach (MonsterType type in monsterTypes)
+                {
+                    validTypes.Add(type.DeepCopy());
+                }
 
                 for (int x = validTypes.Count - 1; x >= 0; x--) //for each monster type in the new list (iterating backward to allow safe removal)
                 {
