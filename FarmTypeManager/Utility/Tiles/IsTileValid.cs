@@ -21,58 +21,46 @@ namespace FarmTypeManager
                 if (strictTileChecking.Equals("none", StringComparison.OrdinalIgnoreCase)) //no validation required
                     return true;
 
-                List<Vector2> tilesToCheck = new List<Vector2>(); //a list of tiles that need to be valid (based on spawn object size)
+                //fast path for 1x1 objects
+                if (size.X == 1 && size.Y == 1)
+                    return IsSingleTileValid(location, tile, strictTileChecking);
 
+                //multi-tile path: check each sub-tile directly without allocating a list
                 for (int x = 0; x < size.X; x++)
                 {
                     for (int y = 0; y < size.Y; y++)
                     {
-                        tilesToCheck.Add(new Vector2(tile.X + x, tile.Y + y));
-                    }
-                }
-
-                if (strictTileChecking.Equals("low", StringComparison.OrdinalIgnoreCase)) //low-strictness validation
-                {
-                    foreach (Vector2 t in tilesToCheck) //for each tile to be checked
-                    {
-                        if (location.isObjectAtTile((int)t.X, (int)t.Y)) //if this tile is blocked by an object
-                        {
+                        if (!IsSingleTileValid(location, new Vector2(tile.X + x, tile.Y + y), strictTileChecking))
                             return false;
-                        }
-                    }
-                }
-                else if (strictTileChecking.Equals("medium", StringComparison.OrdinalIgnoreCase)) //medium-strictness validation
-                {
-                    foreach (Vector2 t in tilesToCheck) //for each tile to be checked
-                    {
-                        if (location.IsTileOccupiedBy(t)) //if this tile is occupied
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else if (strictTileChecking.Equals("high", StringComparison.OrdinalIgnoreCase)) //high-strictness validation
-                {
-                    foreach (Vector2 t in tilesToCheck) //for each tile to be checked
-                    {
-                        if (location.IsTileOccupiedBy(t) || !location.CanItemBePlacedHere(t)) //if the tile is occupied OR not clear for placement
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else //max-strictness validation
-                {
-                    foreach (Vector2 t in tilesToCheck) //for each tile to be checked
-                    {
-                        if (location.IsNoSpawnTile(t) || location.IsTileOccupiedBy(t) || !location.CanItemBePlacedHere(t)) //if this tile has "NoSpawn", is *not* totally clear
-                        {
-                            return false;
-                        }
                     }
                 }
 
                 return true; //all relevant tests passed, so the tile is valid
+            }
+
+            /// <summary>Determines whether a single tile is valid for object placement at the given strictness level.</summary>
+            /// <param name="location">The game location to check.</param>
+            /// <param name="tile">The tile to validate.</param>
+            /// <param name="strictTileChecking">The strictness level string.</param>
+            /// <returns>True if the tile is currently valid for object placement.</returns>
+            private static bool IsSingleTileValid(GameLocation location, Vector2 tile, string strictTileChecking)
+            {
+                if (strictTileChecking.Equals("low", StringComparison.OrdinalIgnoreCase)) //low-strictness validation
+                {
+                    return !location.isObjectAtTile((int)tile.X, (int)tile.Y); //false if this tile is blocked by an object
+                }
+                else if (strictTileChecking.Equals("medium", StringComparison.OrdinalIgnoreCase)) //medium-strictness validation
+                {
+                    return !location.IsTileOccupiedBy(tile); //false if this tile is occupied
+                }
+                else if (strictTileChecking.Equals("high", StringComparison.OrdinalIgnoreCase)) //high-strictness validation
+                {
+                    return !location.IsTileOccupiedBy(tile) && location.CanItemBePlacedHere(tile); //false if the tile is occupied OR not clear for placement
+                }
+                else //max-strictness validation
+                {
+                    return !location.IsNoSpawnTile(tile) && !location.IsTileOccupiedBy(tile) && location.CanItemBePlacedHere(tile); //false if this tile has "NoSpawn", is *not* totally clear
+                }
             }
         }
     }
